@@ -28,7 +28,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
-        // ATENÇÃO: COLOQUE AQUI AS CHAVES DO NOVO PROJETO "Projeto Integrador III-B"
         const firebaseConfig = {
             apiKey: "AIzaSyCewMmziPp1TyDONpIuUpMzeT0PWK8JDy8",
             authDomain: "projeto-integrador-299fb.firebaseapp.com",
@@ -53,7 +52,6 @@
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Login com sucesso, redireciona para o painel
                     window.location.href = "admin.html";
                 })
                 .catch((error) => {

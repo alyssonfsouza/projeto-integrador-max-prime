@@ -23,12 +23,10 @@
         
         .container { padding: 30px; }
         
-        /* Quadro Kanban */
         .kanban-board { display: flex; gap: 20px; overflow-x: auto; align-items: flex-start; padding-bottom: 20px;}
         .kanban-column { background: #2b2b2b; border-radius: 6px; width: 340px; min-width: 340px; padding: 15px; min-height: 500px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .kanban-column h3 { margin: 0 0 15px 0; font-size: 13px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Cards Refinados */
         .kanban-card { background: #383838; padding: 18px; border-radius: 6px; margin-bottom: 12px; cursor: grab; border-left: 3px solid #e5c05c; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
         .kanban-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
         .kanban-card:active { cursor: grabbing; transform: scale(0.98); }
@@ -40,7 +38,6 @@
         .kanban-card h4 { margin: 0 0 8px 0; font-size: 16px; color: #fff; font-weight: 700; }
         .kanban-card p { margin: 0; font-size: 13px; color: #bbb; line-height: 1.5; font-weight: 500; }
         
-        /* Modal de Criação */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: #2a2a2a; padding: 35px; border-radius: 8px; width: 420px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .modal-content h3 { color: #e5c05c; margin-top: 0; margin-bottom: 25px; font-size: 20px; font-weight: 700; }
@@ -126,7 +123,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // 1. Verificação de Sessão
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.body.style.display = 'block';
@@ -136,17 +132,14 @@
             }
         });
 
-        // 2. Logout
         document.getElementById('btnLogout').addEventListener('click', () => {
             signOut(auth).then(() => window.location.href = 'index.html');
         });
 
-        // 3. Controle do Modal
         const modal = document.getElementById('modalTarefa');
         document.getElementById('btnAbrirModal').addEventListener('click', () => modal.style.display = 'flex');
         document.getElementById('btnFecharModal').addEventListener('click', () => modal.style.display = 'none');
 
-        // 4. Salvar Tarefa no Banco de Dados
         document.getElementById('formNovaTarefa').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btnSubmit = e.target.querySelector('button[type="submit"]');
@@ -158,14 +151,14 @@
                 veiculo: document.getElementById('iptVeiculo').value,
                 prazo: document.getElementById('iptData').value,
                 descricao: document.getElementById('iptDescricao').value,
-                status: 'todo' // Padrão: vai para a primeira coluna
+                status: 'todo'
             };
 
             try {
                 await addDoc(collection(db, "tarefas"), novaTarefa);
                 modal.style.display = 'none';
                 e.target.reset();
-                carregarTarefas(); // Atualiza a tela
+                carregarTarefas();
             } catch (error) {
                 console.error("Erro ao salvar:", error);
                 alert("Falha de conexão com o Banco de Dados. Você habilitou o Firestore no Console?");
@@ -175,9 +168,7 @@
             }
         });
 
-        // 5. Ler Tarefas do Banco de Dados
         async function carregarTarefas() {
-            // Zera as colunas
             document.getElementById('todo').innerHTML = '<h3>A Fazer <i class="fas fa-list-ul"></i></h3>';
             document.getElementById('doing').innerHTML = '<h3>Em Andamento <i class="fas fa-spinner"></i></h3>';
             document.getElementById('transfer').innerHTML = '<h3>Transfer em Andamento <i class="fas fa-car"></i></h3>';
@@ -195,7 +186,6 @@
                     card.draggable = true;
                     card.ondragstart = window.drag; 
                     
-                    // Formata a data se existir
                     const dataFormatada = tarefa.prazo ? tarefa.prazo.split('-').reverse().join('/') : '--/--/----';
 
                     card.innerHTML = `
@@ -207,7 +197,6 @@
                         <p>${tarefa.descricao}</p>
                     `;
 
-                    // Anexa o card na coluna correspondente
                     const coluna = document.getElementById(tarefa.status);
                     if(coluna) {
                         coluna.appendChild(card);
@@ -218,7 +207,6 @@
             }
         }
 
-        // 6. Lógica de Atualização no Banco ao arrastar os cards
         window.allowDrop = function(ev) { ev.preventDefault(); }
         window.drag = function(ev) { ev.dataTransfer.setData("text", ev.target.id); }
         window.drop = async function(ev) {
