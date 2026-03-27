@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Max Prime | Transporte Executivo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="container header-flex">
+            <div class="logo">
+                <img src="assets/Logo-novo.png" alt="Max Prime Logo">
+            </div>
+            <nav id="nav-menu">
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#servicos">Serviços</a></li>
+                    <li><a href="#frota">Frota</a></li>
+                    </ul>
+            </nav>
+            <div class="mobile-menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Excelência em Transporte Executivo</h1>
+            <p><strong>Segurança, conforto e pontualidade para você e sua empresa.</strong></p>
+            <a href="https://wa.me/5562984015826?text=Ol%C3%A1%2C+Max+Prime%21+Desejo+realizar+um+or%C3%A7amento%21" target="_blank" class="btn-vip">Orçamento <i class="fab fa-whatsapp"></i></a>
+        </div>
+    </section>
+
+    <section id="servicos" class="section-dark">
+        <div class="container">
+            <h2>Nossos Serviços</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <i class="fas fa-plane-arrival"></i>
+                    <h3>Transfer Aeroporto</h3>
+                    <p>Recepção no aeroporto e traslado com conforto até seu destino.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-business-time"></i>
+                    <h3>Corporativo</h3>
+                    <p>Transporte para executivos, eventos e reuniões de negócios.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-star"></i>
+                    <h3>City Tour & Viagens</h3>
+                    <p>Turismo personalizado com motoristas experientes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="frota" class="section-light">
+        <div class="container">
+            <h2>Nossa Frota</h2>
+            <p style="text-align: center; color: var(--text-gray); margin-bottom: 30px;">
+                Veículos modernos, higienizados e equipados para o seu conforto.
+            </p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="assets/frotaI.jpeg" alt="Veículo Max Prime 1">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/frotaII.jpeg" alt="Veículo Max Prime 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/frotaIII.jpeg" alt="Veículo Max Prime 3">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/frotaIV.jpeg" alt="Veículo Max Prime 4">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/frotaV.jpeg" alt="Veículo Max Prime 5">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/frotaVI.jpeg" alt="Veículo Max Prime 6">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contato">
+        <div class="container footer-flex">
+            <div class="footer-info">
+                <h3>Max Prime</h3>
+                <p style="color: #999; margin-bottom: 20px;">Transporte & Turismo</p>
+                
+                <div class="contact-list">
+                    <p>
+                        <i class="fas fa-map-marker-alt"></i> 
+                        <a href="https://share.google/PAhOe8ndjOfwV6shE" target="_blank" style="color: inherit; text-decoration: none; margin-left: 5px;">
+                            Goiânia - GO
+                        </a>
+                    </p>
+                    
+                    <p>
+                        <i class="fas fa-envelope"></i> 
+                        <a href="mailto:maxprimegoiania@gmail.com" style="color: inherit; text-decoration: none; margin-left: 5px;">
+                            maxprimegoiania@gmail.com
+                        </a>
+                    </p>
+                </div>
+
+                <div class="socials">
+                    <a href="https://www.instagram.com/maxprimegoiania?igsh=bzZwZzd3d2ZwcHl3" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/5562984015826?text=Ol%C3%A1%2C+Max+Prime%21+Desejo+realizar+um+or%C3%A7amento%21" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+                <div class="footer-copy">
+                    <p>&copy; 2025 Max Prime. Todos os direitos reservados.</p>
+                        <p>
+                            Desenvolvido por 
+                        <a href="https://alyssonfsouzadev.web.app" target="_blank" class="dev-link">
+                            Alysson F. Souza
+                    </a>
+        |       <a href="login.html" style="color: #444; text-decoration: none; font-size: 11px;">Restrito</a>
+            </p>
+        </div> 
+    </footer>
+
+    <a href="https://wa.me/5562984015826?text=Ol%C3%A1%2C+Max+Prime%21+Desejo+realizar+um+or%C3%A7amento%21" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script type="module">
+      // Importando as funções do Firebase v12.7.0
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+
+      // Configuração do Max Prime Transfer
+      const firebaseConfig = {
+        apiKey: "AIzaSyDXM5-9C-hNIhM5-_0CLi73marNB-47M4c",
+        authDomain: "maxprimetransfergoiania.firebaseapp.com",
+        projectId: "maxprimetransfergoiania",
+        storageBucket: "maxprimetransfergoiania.firebasestorage.app",
+        messagingSenderId: "768519847226",
+        appId: "1:768519847226:web:b3ac99b3104e2d24f0a403",
+        measurementId: "G-00TG0KTBQ4"
+      };
+
+      // Inicializa o Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      
+      console.log("Analytics Max Prime conectado com sucesso!");
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

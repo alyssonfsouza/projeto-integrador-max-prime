@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Max Prime Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #111; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: #222; padding: 30px; border-radius: 8px; width: 100%; max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #d4af37; margin-top: 0; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: none; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #d4af37; color: #000; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #b5952f; }
+        #error-msg { color: #ff4c4c; font-size: 12px; text-align: center; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h2>Acesso Restrito</h2>
+        <input type="email" id="email" placeholder="E-mail" required>
+        <input type="password" id="senha" placeholder="Senha" required>
+        <button id="btnLogin">Entrar</button>
+        <span id="error-msg"></span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+        // ATENÇÃO: COLOQUE AQUI AS CHAVES DO NOVO PROJETO "Projeto Integrador III-B"
+        const firebaseConfig = {
+            apiKey: "AIzaSyCewMmziPp1TyDONpIuUpMzeT0PWK8JDy8",
+            authDomain: "projeto-integrador-299fb.firebaseapp.com",
+            projectId: "projeto-integrador-299fb",
+            storageBucket: "projeto-integrador-299fb.firebasestorage.app",
+            messagingSenderId: "400876947285",
+            appId: "1:400876947285:web:ea47d61dce51cecbacd1dc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('btnLogin').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('senha').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            if(!email || !password) {
+                errorMsg.innerText = "Preencha todos os campos.";
+                return;
+            }
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Login com sucesso, redireciona para o painel
+                    window.location.href = "admin.html";
+                })
+                .catch((error) => {
+                    errorMsg.innerText = "Falha no login. Verifique suas credenciais.";
+                    console.error(error.code, error.message);
+                });
+        });
+    </script>
+</body>
+</html>

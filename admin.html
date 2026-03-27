@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Max Prime - Gestão de Frotas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
+        
+        body { font-family: 'Montserrat', sans-serif; background: #202020; margin: 0; padding: 0; display: none; color: #f4f4f4; }
+        
+        .navbar { background-color: #111; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e5c05c; }
+        .navbar h2 { margin: 0; font-size: 20px; color: #fff; font-weight: 700; letter-spacing: -0.5px; }
+        .navbar span { color: #e5c05c; font-weight: 600; }
+        
+        .nav-actions { display: flex; gap: 15px; }
+        
+        .btn-primary { background: #e5c05c; color: #111; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 13px; transition: 0.2s; }
+        .btn-primary:hover { background: #d4af37; }
+        
+        .btn-logout { background: transparent; color: #e5c05c; border: 1px solid #e5c05c; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 600; font-family: inherit; font-size: 13px; transition: 0.2s; }
+        .btn-logout:hover { background: #e5c05c; color: #111; }
+        
+        .container { padding: 30px; }
+        
+        /* Quadro Kanban */
+        .kanban-board { display: flex; gap: 20px; overflow-x: auto; align-items: flex-start; padding-bottom: 20px;}
+        .kanban-column { background: #2b2b2b; border-radius: 6px; width: 340px; min-width: 340px; padding: 15px; min-height: 500px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .kanban-column h3 { margin: 0 0 15px 0; font-size: 13px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Cards Refinados */
+        .kanban-card { background: #383838; padding: 18px; border-radius: 6px; margin-bottom: 12px; cursor: grab; border-left: 3px solid #e5c05c; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+        .kanban-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .kanban-card:active { cursor: grabbing; transform: scale(0.98); }
+        
+        .task-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .task-tag { font-size: 10px; background: #4a4a4a; color: #e5c05c; padding: 4px 8px; border-radius: 4px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .task-date { font-size: 11px; color: #999; font-weight: 600; background: #2a2a2a; padding: 4px 8px; border-radius: 4px; }
+        
+        .kanban-card h4 { margin: 0 0 8px 0; font-size: 16px; color: #fff; font-weight: 700; }
+        .kanban-card p { margin: 0; font-size: 13px; color: #bbb; line-height: 1.5; font-weight: 500; }
+        
+        /* Modal de Criação */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #2a2a2a; padding: 35px; border-radius: 8px; width: 420px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-content h3 { color: #e5c05c; margin-top: 0; margin-bottom: 25px; font-size: 20px; font-weight: 700; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 12px; color: #aaa; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; background: #1e1e1e; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 14px; outline: none; transition: 0.2s; }
+        .form-group input:focus, .form-group textarea:focus { border-color: #e5c05c; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; }
+        .btn-cancel { background: transparent; color: #aaa; border: 1px solid #555; padding: 10px 18px; cursor: pointer; border-radius: 4px; font-weight: 600; font-family: inherit; transition: 0.2s; }
+        .btn-cancel:hover { background: #444; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h2>Gestão de Tarefas <span>| Max Prime</span></h2>
+        <div class="nav-actions">
+            <button class="btn-primary" id="btnAbrirModal"><i class="fas fa-plus"></i> Nova Locação</button>
+            <button class="btn-logout" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="kanban-board">
+            <div class="kanban-column" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>A Fazer <i class="fas fa-list-ul"></i></h3>
+            </div>
+            <div class="kanban-column" id="doing" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>Em Andamento <i class="fas fa-spinner"></i></h3>
+            </div>
+            <div class="kanban-column" id="transfer" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>Transfer em Andamento <i class="fas fa-car"></i></h3>
+            </div>
+            <div class="kanban-column" id="done" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>Concluído <i class="fas fa-check-double"></i></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalTarefa">
+        <div class="modal-content">
+            <h3>Cadastrar Nova Demanda</h3>
+            <form id="formNovaTarefa">
+                <div class="form-group">
+                    <label>Identificação (Ex: Locação #001)</label>
+                    <input type="text" id="iptProjeto" required>
+                </div>
+                <div class="form-group">
+                    <label>Veículo / Serviço</label>
+                    <input type="text" id="iptVeiculo" required placeholder="Ex: Revisão SW4">
+                </div>
+                <div class="form-group">
+                    <label>Data de Finalização</label>
+                    <input type="date" id="iptData" required>
+                </div>
+                <div class="form-group">
+                    <label>Descrição detalhada</label>
+                    <textarea id="iptDescricao" required rows="4"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="btnFecharModal">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar no Kanban</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, updateDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCewMmziPp1TyDONpIuUpMzeT0PWK8JDy8",
+            authDomain: "projeto-integrador-299fb.firebaseapp.com",
+            projectId: "projeto-integrador-299fb",
+            storageBucket: "projeto-integrador-299fb.firebasestorage.app",
+            messagingSenderId: "400876947285",
+            appId: "1:400876947285:web:ea47d61dce51cecbacd1dc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // 1. Verificação de Sessão
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.body.style.display = 'block';
+                carregarTarefas(); 
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // 2. Logout
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = 'index.html');
+        });
+
+        // 3. Controle do Modal
+        const modal = document.getElementById('modalTarefa');
+        document.getElementById('btnAbrirModal').addEventListener('click', () => modal.style.display = 'flex');
+        document.getElementById('btnFecharModal').addEventListener('click', () => modal.style.display = 'none');
+
+        // 4. Salvar Tarefa no Banco de Dados
+        document.getElementById('formNovaTarefa').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            btnSubmit.innerText = 'Gravando...';
+            btnSubmit.disabled = true;
+
+            const novaTarefa = {
+                projeto: document.getElementById('iptProjeto').value,
+                veiculo: document.getElementById('iptVeiculo').value,
+                prazo: document.getElementById('iptData').value,
+                descricao: document.getElementById('iptDescricao').value,
+                status: 'todo' // Padrão: vai para a primeira coluna
+            };
+
+            try {
+                await addDoc(collection(db, "tarefas"), novaTarefa);
+                modal.style.display = 'none';
+                e.target.reset();
+                carregarTarefas(); // Atualiza a tela
+            } catch (error) {
+                console.error("Erro ao salvar:", error);
+                alert("Falha de conexão com o Banco de Dados. Você habilitou o Firestore no Console?");
+            } finally {
+                btnSubmit.innerText = 'Salvar no Kanban';
+                btnSubmit.disabled = false;
+            }
+        });
+
+        // 5. Ler Tarefas do Banco de Dados
+        async function carregarTarefas() {
+            // Zera as colunas
+            document.getElementById('todo').innerHTML = '<h3>A Fazer <i class="fas fa-list-ul"></i></h3>';
+            document.getElementById('doing').innerHTML = '<h3>Em Andamento <i class="fas fa-spinner"></i></h3>';
+            document.getElementById('transfer').innerHTML = '<h3>Transfer em Andamento <i class="fas fa-car"></i></h3>';
+            document.getElementById('done').innerHTML = '<h3>Concluído <i class="fas fa-check-double"></i></h3>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "tarefas"));
+                querySnapshot.forEach((documento) => {
+                    const tarefa = documento.data();
+                    const id = documento.id; 
+                    
+                    const card = document.createElement('div');
+                    card.className = 'kanban-card';
+                    card.id = id;
+                    card.draggable = true;
+                    card.ondragstart = window.drag; 
+                    
+                    // Formata a data se existir
+                    const dataFormatada = tarefa.prazo ? tarefa.prazo.split('-').reverse().join('/') : '--/--/----';
+
+                    card.innerHTML = `
+                        <div class="task-header">
+                            <span class="task-tag">${tarefa.projeto}</span>
+                            <span class="task-date"><i class="far fa-calendar-alt"></i> ${dataFormatada}</span>
+                        </div>
+                        <h4>${tarefa.veiculo}</h4>
+                        <p>${tarefa.descricao}</p>
+                    `;
+
+                    // Anexa o card na coluna correspondente
+                    const coluna = document.getElementById(tarefa.status);
+                    if(coluna) {
+                        coluna.appendChild(card);
+                    }
+                });
+            } catch (error) {
+                console.error("Erro ao ler dados:", error);
+            }
+        }
+
+        // 6. Lógica de Atualização no Banco ao arrastar os cards
+        window.allowDrop = function(ev) { ev.preventDefault(); }
+        window.drag = function(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+        window.drop = async function(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const cardElement = document.getElementById(data);
+            
+            const dropZone = ev.target.closest('.kanban-column');
+            
+            if (dropZone && cardElement) {
+                dropZone.appendChild(cardElement);
+                const novoStatus = dropZone.id; 
+                
+                try {
+                    await updateDoc(doc(db, "tarefas", data), { status: novoStatus });
+                } catch (error) {
+                    console.error("Erro ao mover a tarefa:", error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
